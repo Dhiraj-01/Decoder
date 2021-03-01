@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import {AlertService} from '@full-fledged/alerts';
+import { AlertService } from '@full-fledged/alerts';
 
 @Injectable({
   providedIn: 'root'
@@ -30,10 +30,10 @@ export class UserService {
 
   curUser = { userData: { username: "" } };
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     public router: Router,
     public _alertService: AlertService
-    ) { }
+  ) { }
 
   getLanguage() {
     return this.choosen.language;
@@ -70,7 +70,10 @@ export class UserService {
       this.curUser = res.result;
       console.log(this.curUser);
       this.currentUser = this.curUser.userData;
+      this._alertService.success("welcome!");
       this.router.navigate(['/']);
+    }, err => {
+      this.handleError(err.error.err, err.status);
     });
   }
   itemValue = new Subject<string>();
@@ -96,6 +99,7 @@ export class UserService {
   doLogout() {
     let removeToken = localStorage.removeItem('access_token');
     let removeUser = localStorage.removeItem('currentUser');
+    localStorage.removeItem('currentUserName');
     if (removeToken == null && removeUser == null) {
       this.router.navigate(['/login']);
     }
@@ -110,7 +114,8 @@ export class UserService {
         this._alertService.success('Email Verified!');
         this.router.navigate(['/login']);
       } else {
-        alert("Invalid token or token expired!");
+        // alert("Invalid token or token expired!");
+        this._alertService.warning("Invalid token or token expired!");
       }
     });
   }
@@ -120,11 +125,14 @@ export class UserService {
   getAllPublicCodes(): Observable<any> {
     return this.http.get<any>(this.apiUrl + '/code/all');
   }
-  getCodeById(id: string): Observable<any> {
-    return this.http.get<any>(this.apiUrl + '/code/view/public/' + id);
+  getCodeById(data): Observable<any> {
+    return this.http.get<any>(this.apiUrl + `/code/view/${data.currentUser}/${data.id}`);
   }
-  getCodeByUser(user: string): Observable<any> {
-    return this.http.get<any>(this.apiUrl + '/code/view/' + user);
+  getCodesByUser(user: string): Observable<any> {
+    if (this.currentUser == user)
+      return this.http.get<any>(this.apiUrl + '/code/view/' + user);
+    else
+      return this.http.get<any>(this.apiUrl + '/code/view/public');
   }
   saveCode(data): Observable<any> {
     return this.http.post<any>(this.apiUrl + '/code/save', data);
@@ -137,5 +145,12 @@ export class UserService {
   }
   deleteCodeById(id: string): Observable<any> {
     return this.http.delete<any>(this.apiUrl + `/code/delete/${id}`);
+  }
+  handleError(error, port) {
+    let errorMessage = '';
+    errorMessage = `Error Code: ${port}\nMessage: ${error}`;
+    this._alertService.danger(errorMessage);
+    // window.alert(errorMessage);
+    return throwError(errorMessage);
   }
 }

@@ -89,10 +89,11 @@ export class CodeViewComponent implements OnInit {
   ngOnInit(): void {
     $('[data-toggle="tooltip"]').tooltip();
 
-    this.userData.getCodeById(this.code_id).subscribe((data) => {
+    console.log(this.code_id);
+    this.userData.getCodeById({ id: this.code_id, currentUser: this.userData.currentUser }).subscribe((data) => {
 
       this.code_data = data.result;
-      console.log(this.code_data);
+      // console.log(this.code_data);
 
       if (!this.code_data) {
         this.router.navigate['/error'];
@@ -219,6 +220,9 @@ export class CodeViewComponent implements OnInit {
     document.body.removeChild(selBox);
   }
 
+  isOk() {
+    return this.code_data.author === this.userData.currentUser;
+  }
   editButtonClick() {
     this.router.navigate([`/ide/edit/${this.code_data.id}`]);
   }
@@ -226,7 +230,7 @@ export class CodeViewComponent implements OnInit {
     this.userData.deleteCodeById(this.code_data.id).subscribe(data => {
       if (data) {
         console.log(data);
-        this.router.navigate(['/code/recent']);
+        this.router.navigate(['/code/' + this.userData.currentUser]);
       }
     });
   }

@@ -35,18 +35,18 @@ const routes: Routes = [
   {
     path: 'ide/edit/:id',
     component: CodeIdeComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'code/view/:id',
     component: CodeViewComponent,
   },
+  // {
+  //   path: 'code/recent',
+  //   component: CodeRecentComponent,
+  // },
   {
-    path: 'code/recent',
-    component: CodeRecentComponent,
-  },
-  {
-    path: 'code/:user/:id',
+    path: 'code/:user',
     component: CodeUserComponent,
     canActivate: [AuthGuard]
   },
@@ -87,7 +87,7 @@ const routes: Routes = [
   {
     path: 'profile/:user',
     component: ProfileComponent,
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
   {
     path: 'about',

@@ -8,12 +8,15 @@
             <li class="nav-item">
                 <a class="nav-link text-white" routerLink="/ide">IDE</a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link text-white" routerLink="/code/recent">Recent codes</a>
-            </li>
+            </li> -->
             <!-- <li class="nav-item">
                 <a class="nav-link text-white" routerLink="/blog/recent">Blogs</a>
             </li> -->
+            <li *ngIf="this._userService.isLoggedIn" class="nav-item">
+                <a class="nav-link text-white" routerLink="/code/{{this._userService.currentUser}}">My codes</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link text-white" routerLink="/upcoming-contest">Upcoming Contests</a>
             </li>
@@ -33,11 +36,11 @@
 
         <ng-template #elseBlock>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link text-white" routerLink="/code/Guest/Default">My codes</a>
-                </li>
+                </li> -->
                 <li class="nav-item">
-                    <a class="nav-link text-white" routerLink="/profile/#">
+                    <a class="nav-link text-white" routerLink="/profile/{{this._userService.currentUser}}">
                         {{this._userService.currentUser || "Profile"}}
                     </a>
                 </li>

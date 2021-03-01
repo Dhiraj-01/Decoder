@@ -22,9 +22,9 @@
                         <div class="col-sm-9">
                             <div class="row">
                                 <div class="col text-right">
-                                    <a class=" btn-sm btn-default icon-size" data-toggle="tooltip"
-                                        title="Share your code" (click)="shareCodeClick()">
-                                        <i class="fas fa-share-square"></i>
+                                    <a *ngIf="this.userData.isLoggedIn" class=" btn-sm btn-default icon-size"
+                                        data-toggle="tooltip" title="Save your code" (click)="shareCodeClick()">
+                                        <i class="fas fa-save"></i>
                                     </a>
                                     <a class=" btn-sm btn-default icon-size" data-toggle="tooltip"
                                         (click)="beautifyContent()" title="Indent your code">
@@ -43,19 +43,19 @@
                                         (click)="copyToClipboard('code')" title="copy code">
                                         <i class="fas fa-copy"></i>
                                     </a>
-                                    <a class=" btn-sm btn-default icon-size" data-toggle="tooltip"
+                                    <!-- <a class=" btn-sm btn-default icon-size" data-toggle="tooltip"
                                         title="save user settings">
                                         <i class="fas fa-user-cog"></i>
                                     </a>
                                     <a class=" btn-sm btn-default icon-size" data-toggle="tooltip"
                                         title="save as template">
                                         <i class="fas fa-save"></i>
-                                    </a>
+                                    </a> -->
 
                                     <input type="file" id="codeUpload" class="hide"
                                         (change)="onChangeFile($event.target.files)" />
                                 </div>
-                                <div class="col-sm-2">
+                                <!-- <div class="col-sm-2">
                                     <i class="fas fa-folder"></i>
                                     <select class="ml-2 form-select form-control-sm" data-toggle="tooltip"
                                         title="Select folder" aria-label="Default select example">
@@ -66,7 +66,7 @@
                                         <option value="4">Python</option>
                                         <option value="5">Javascript</option>
                                     </select>
-                                </div>
+                                </div> -->
                                 <div class="col-sm-2">
                                     <div>
                                         <!-- <small>Language</small> -->
@@ -100,6 +100,13 @@
                                         class="col btn btn-outline-primary btn-sm" (click)="runClicked()" #runButton>
                                         <i class="fas fa-play"></i>
                                         <span class="ml-1"> Run </span>
+                                    </button>
+                                </div>
+                                <div *ngIf="this.userData.isLoggedIn" class="col-sm-2">
+                                    <button type="button" id="runButton" class="col btn btn-outline-info btn-sm"
+                                        (click)="updateCode()" #runButton>
+                                        <i class="fas fa-edit"></i>
+                                        <span class="ml-1"> Update </span>
                                     </button>
                                 </div>
                             </div>
