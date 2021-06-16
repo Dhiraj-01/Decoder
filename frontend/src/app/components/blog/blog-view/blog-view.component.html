@@ -1,3 +1,74 @@
-<section>
-    <p>blog-view works!</p>
-</section>
+<div class="m-4 border rounded full">
+    <ngx-spinner type="ball-pulse-sync">
+        <p style="font-size: 20px; color: white">{{loadingMsg}}</p>
+    </ngx-spinner>
+
+    <div class="m-4" *ngIf="blog">
+        <div class="row">
+            <a class="col link hover-link author font-italic" routerLink="/profile/{{blog.author}}">
+                Author : {{blog.author}}
+            </a>
+            <div class="col-sm-2 text-right published text-gray font-italic">
+                Published : {{blog.published}}
+            </div>
+            <div *ngIf="isSameAuthor()" class="col-sm-2 text-right">
+                <button class="btn btn-sm btn-primary" routerLink="/questions/edit/{{blog_id}}">Edit</button>
+                <button class="btn btn-sm btn-danger ml-2" (click)="deleteBlog()">Delete</button>
+            </div>
+            <hr>
+        </div>
+        <div>
+            <div>
+                <div class="title">
+                    <small class="font-italic text-info">title</small>
+                    <div class="h3 font3 clr1">
+                        {{blog.title}}
+                    </div>
+                </div>
+                <div class="description">
+                    <small class="font-italic text-info">description</small>
+                    <div>
+                        {{blog.description}}
+                    </div>
+                </div>
+                <hr>
+                <div class="content">
+                    <small class="font-italic text-info">content</small>
+                    <div>
+                        <markdown [data]="blog.content"></markdown>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div *ngIf="isSameAuthor()">
+            <button class="btn btn-sm btn-primary" routerLink="/questions/edit/{{blog_id}}">Edit</button>
+            <button class="btn btn-sm btn-danger ml-2" (click)="deleteBlog()">Delete</button>
+        </div> -->
+        <hr>
+        <div class="mt-2" *ngIf="isLoggedIn()">
+            <textarea name="comment" class="form-control code" rows="5" #comment></textarea>
+            <br>
+            <button class="btn btn-info btn-sm" (click)="addComment(comment.value)">Add Comment</button>
+        </div>
+        <div class="mt-3">
+            <h5>Comments ({{blog.comments.length}})</h5>
+            <div>
+                <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let comment of blog.comments; let isEven = even" [ngClass]="isEven ? '' : 'bg-gray'">
+                        <div>
+                            <small class="row">
+                                <a class="col text-primary" routerLink="/profile/{{comment.author}}">
+                                    {{comment.author}} 
+                                </a>
+                                <div class="col text-right">
+                                    {{comment.published}}
+                                </div>
+                            </small>
+                            <markdown [data]="comment.content"></markdown>
+                            <button *ngIf="comment.author == userService.currentUser" class="btn btn-sm btn-outline-dark" id="{{comment._id}}" (click)="deleteComment($event)">delete</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>

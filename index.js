@@ -15,13 +15,19 @@ connectWithDatabase().then(() => {
 
 // Middlewares
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json());
+// Parse URL-encoded bodies (as sent by HTML forms)
+app.use(express.urlencoded({ extended: true }));
+// Parse JSON bodies (as sent by API clients)
+app.use(express.json());
+
 // app.use(require('./middlewares/auth.middelware'));
 
 // Routes
 const codeRoute = require('./routes/code.routes');
 const authRoute = require('./routes/user.routes');
+const blogRoute = require('./routes/blog.routes');
+
 app.use('/api/code', codeRoute);
+app.use('/api/blog', blogRoute);
 app.use('/auth', authRoute);
 app.use('/', (_req, res) => res.send('Backend is alive !!'));

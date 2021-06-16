@@ -1,1 +1,47 @@
-<p>blog-recent works!</p>
+<div class="pl-5 pr-5 pb-5 full">
+    <ngx-spinner type="ball-zig-zag-deflect">
+        <div>&nbsp;</div>
+        <div>&nbsp;</div>
+        <p style="font-size: 20px; color: white">{{loadingMsg}}</p>
+    </ngx-spinner>
+
+    <div class="input-group mb-3 mt-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" routerLink="./" [queryParams]="{search : searchEle.value}"
+                queryParamsHandling="merge">
+                <i class="fa fa-search"></i>
+            </span>
+        </div>
+        <input class="form-control" #searchEle placeholder="Search questions or author ..." (keyup)="filter(searchEle.value)">
+        <div class="col-2 text-left" *ngIf="this.userService.isLoggedIn">
+            <button class="btn btn-outline-dark col" routerLink="/questions/create">Ask Doubt</button>
+        </div>
+    </div>
+    <div>
+        <ul class="list-group" *ngFor="let b of blogs; let isEven = even">
+            <li class="list-group-item" [ngClass]="isEven ? '' : 'bg-gray'">
+                <div>
+                    <div class="row">
+                        <div class="col link author font-italic" routerLink="/profile/{{b.author}}">
+                            Author :
+                            <span class="font-weight-bold blue-hover">
+                                {{b.author}}
+                            </span>
+                        </div>
+                        <div class="col text-right published text-gray font-italic">
+                            Published : {{b.published}}
+                        </div>
+                    </div>
+                    <div class="pointer mt-1" routerLink="/questions/view/{{b._id}}">
+                        <div class="h4 font3 clr1 blue-hover">
+                            {{b.title}}
+                        </div>
+                        <div class="description">
+                            {{b.description}}
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

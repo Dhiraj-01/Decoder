@@ -59,6 +59,8 @@ import { AdminService } from "src/app/service/admin.service";
 import { UserService } from "src/app/service/user.service";
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from "ngx-spinner";
+import { environment } from 'src/environments/environment';
+import { AlertService } from '@full-fledged/alerts';
 
 declare var $: any;
 
@@ -108,7 +110,8 @@ export class CodeIdeComponent implements OnInit {
     public userData: UserService,
     private router: Router,
     route: ActivatedRoute,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private _alertService: AlertService
   ) {
     this.code_id = route.snapshot.params.id;
   }
@@ -177,7 +180,11 @@ export class CodeIdeComponent implements OnInit {
     if (this.code_id) {
       this.editCodeMode();
     }
-    this.spinner.hide();
+    if (environment.production) {
+      this.spinner.hide();
+    } else {
+      setTimeout(() => this.spinner.hide(), 2000);
+    }
   }
 
   editCodeMode() {
@@ -274,6 +281,7 @@ export class CodeIdeComponent implements OnInit {
     selBox.select();
     document.execCommand('copy');
     document.body.removeChild(selBox);
+    this._alertService.success( editor + " copied into to the clipboard");
   }
 
   /**
@@ -401,7 +409,11 @@ export class CodeIdeComponent implements OnInit {
     this.userData.saveCode(codeObj).subscribe((data) => {
       if (!data.err) this.router.navigate(['/code/view/' + data.result.id]);
     });
-    this.spinner.hide();
+    if (environment.production) {
+      this.spinner.hide();
+    } else {
+      setTimeout(() => this.spinner.hide(), 2000);
+    }
   }
 
   public async updateCode() {
